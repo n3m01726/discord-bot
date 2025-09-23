@@ -28,11 +28,11 @@ const apiKeySchema = z.object({
 // Fonction de sanitization
 function sanitizeInput (input) {
   if (typeof input === 'string') {
-    return input
-      .trim()
+    let sanitized = input.trim()
       .replace(/[<>]/g, '') // Supprimer les balises HTML basiques
       .replace(/(?:javascript:|data:|vbscript:)/gi, '') // Supprimer les protocoles dangereux
       .replace(/on\w+=/gi, ''); // Supprimer les événements JavaScript
+
   }
   return input;
 }

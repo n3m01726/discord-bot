@@ -18,7 +18,7 @@ function checkUser () {
     const user = process.env.USER || process.env.USERNAME;
     const uid = process.getuid ? process.getuid() : null;
 
-    console.log(`👤 Utilisateur actuel: ${user} (UID: ${uid})`);
+    console.log('👤 Vérification de l\'utilisateur courant (détails masqués pour la sécurité)...');
 
     if (uid === 0) {
       console.error(
