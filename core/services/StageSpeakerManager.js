@@ -13,7 +13,7 @@ class StageSpeakerManager {
       PermissionFlagsBits.RequestToSpeak
     ];
 
-    logger.info('🎤 StageSpeakerManager initialisé');
+    logger.info('StageSpeakerManager initialisé');
   }
 
   /**

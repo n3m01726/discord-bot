@@ -12,7 +12,7 @@ class StageMonitor {
     this.monitoringInterval = null;
     this.connectedStages = new Map(); // guildId -> { channelId, lastCheck }
 
-    logger.info('🎭 StageMonitor initialisé');
+    logger.info('StageMonitor initialisé');
   }
 
   /**
@@ -29,7 +29,7 @@ class StageMonitor {
       this.checkAllStages();
     }, this.checkInterval);
 
-    logger.info('🎭 Surveillance des stages démarrée');
+    logger.info('Surveillance des stages démarrée');
   }
 
   /**
