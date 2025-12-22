@@ -79,7 +79,12 @@ class StageSpeakerManager {
       logger.info('🎤 Tentative de promotion du bot en speaker...');
 
       // Dans discord.js v14, on utilise setSuppressed(false) pour promouvoir en speaker
-      await connection.voice.setSuppressed(false);
+      const botMember = channel.guild.members.me;
+if (!botMember.voice.channelId) {
+    throw new Error('Bot not connected to voice');
+}
+
+await botMember.voice.setSuppressed(false);
 
       logger.success('🎤 Bot promu en speaker avec succès');
 
@@ -88,6 +93,10 @@ class StageSpeakerManager {
         message: 'Bot promu en speaker avec succès'
       };
     } catch (error) {
+      if (error.code === 'DiscordAPIError[50013]' || error.name === 'DiscordAPIError' && error.message.includes('permissions')) {
+        errorType = 'INSUFFICIENT_PERMISSIONS';
+        userMessage = 'Le bot n\'est pas Stage Moderator (permission "Gérer le canal" manquante dans le stage)';
+    }
       logger.error('🎤 Erreur lors de la promotion en speaker:', error);
 
       // Analyser le type d'erreur

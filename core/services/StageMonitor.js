@@ -1,9 +1,10 @@
 // ========================================
-// core/services/StageMonitor.js - Surveillance des stages pour déconnexion automatique
+// core/services/StageMonitor.js - Surveillance des stages pour déconnexion automatique + auto-promotion speaker
 // ========================================
 
 import { getVoiceConnection } from '@discordjs/voice';
 import logger from '../../bot/logger.js';
+import stageSpeakerManager from './StageSpeakerManager.js';  // ← AJOUT : Import du manager de promotion
 
 class StageMonitor {
   constructor () {
@@ -58,6 +59,9 @@ class StageMonitor {
       lastCheck: Date.now()
     });
     logger.info(`🎭 Stage enregistré pour surveillance: ${guildId} -> ${channelId}`);
+
+    // ← AJOUT : Lancer l'auto-promotion immédiatement après l'enregistrement
+    this.promoteBotInStage(guildId, channelId);
   }
 
   /**
@@ -67,6 +71,44 @@ class StageMonitor {
     if (this.connectedStages.has(guildId)) {
       this.connectedStages.delete(guildId);
       logger.info(`🎭 Stage désenregistré de la surveillance: ${guildId}`);
+    }
+  }
+
+  /**
+   * Tenter de promouvoir le bot en speaker dans un stage (AJOUT)
+   */
+  async promoteBotInStage (guildId, channelId) {
+    try {
+      const connection = getVoiceConnection(guildId);
+      if (!connection) {
+        logger.warn(`🎤 Pas de connexion active pour promouvoir dans le stage ${channelId}`);
+        return;
+      }
+
+      const channel = connection.joinConfig.guild.channels.cache.get(channelId);
+      if (!channel) {
+        logger.warn(`🎤 Canal introuvable pour promotion: ${channelId}`);
+        return;
+      }
+
+      // Vérifier que c'est bien un stage channel (type 13 = GuildStageVoice)
+      if (channel.type !== 13) {
+        logger.debug(`🎤 Canal n'est pas un stage (type ${channel.type}), promotion ignorée`);
+        return;
+      }
+
+      // Délai pour laisser Discord stabiliser l'état vocal (évite les erreurs prématurées)
+      setTimeout(async () => {
+        const result = await stageSpeakerManager.promoteToSpeaker(connection, channel);
+        if (result.success) {
+          logger.info(`🎤 Bot auto-promu en speaker dans ${channel.name}`);
+        } else {
+          logger.warn(`🎤 Échec auto-promotion dans ${channel.name}: ${result.message}`);
+        }
+      }, 3000); // 3 secondes – tu peux ajuster entre 2000 et 5000 si besoin
+
+    } catch (error) {
+      logger.error('🎤 Erreur lors de la tentative d\'auto-promotion:', error);
     }
   }
 
@@ -181,15 +223,24 @@ class StageMonitor {
   /**
    * Gérer les changements d'état vocal (événement Discord)
    */
-  handleVoiceStateUpdate (oldState) {
-    // Si quelqu'un quitte un stage surveillé, vérifier immédiatement
+  handleVoiceStateUpdate (oldState, newState) {  // ← Note : il faut passer oldState ET newState
+    // Cas 1 : Quelqu'un quitte un stage surveillé → vérification immédiate
     if (oldState.channelId && this.connectedStages.has(oldState.guild.id)) {
       const stageInfo = this.connectedStages.get(oldState.guild.id);
       if (stageInfo.channelId === oldState.channelId) {
-        // Vérifier immédiatement après un changement
         setTimeout(() => {
           this.checkStage(oldState.guild.id, stageInfo.channelId);
-        }, 2000); // Attendre 2 secondes pour que l'état se stabilise
+        }, 2000);
+      }
+    }
+
+    // ← AJOUT : Détecter quand LE BOT rejoint un stage channel
+    if (newState.member.id === newState.client.user.id && newState.channelId) {
+      const newChannel = newState.channel;
+      if (newChannel && newChannel.type === 13) { // 13 = GuildStageVoice
+        logger.info(`🎭 Bot a rejoint un stage: ${newChannel.name} (${newState.guild.id})`);
+        this.registerStage(newState.guild.id, newState.channelId);
+        // La promotion sera lancée automatiquement via registerStage → promoteBotInStage
       }
     }
   }
