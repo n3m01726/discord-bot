@@ -12,14 +12,19 @@ export default {
   builder: (subcommand) =>
     subcommand
       .setName('ask')
-      .setDescription('Proposer un morceau pour la rotation')
+      .setDescription('Faire une demande spéciale')
+      .addStringOption((option) =>
+        option
+          .setName('artiste')
+          .setDescription('L\'artiste')
+          .setRequired(true))
+
       .addStringOption((option) =>
         option
           .setName('titre')
           .setDescription('Le titre du morceau')
           .setRequired(true))
-      .addStringOption((option) =>
-        option.setName('artiste').setDescription('L\'artiste').setRequired(true))
+
       .addStringOption((option) =>
         option
           .setName('lien')
@@ -63,7 +68,7 @@ export default {
 
       // Send to private discord channel
       const privateChannel = interaction.client.channels.cache.get(
-        config.channelId
+        config.reqChannelId
       );
       if (privateChannel) {
         await privateChannel.send(

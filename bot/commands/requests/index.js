@@ -19,7 +19,7 @@ export default {
     const subcommand = interaction.options.getSubcommand();
 
     // Check role permissions for all subcommands
-    if (!interaction.member.roles.cache.has(config.roleId)) {
+    if (!interaction.member.roles.cache.has(config.reqRoleId)) {
       return await interaction.reply({
         content: '❌ Tu n\'as pas l\'autorisation d\'utiliser cette commande.',
         flags: MessageFlags.Ephemeral

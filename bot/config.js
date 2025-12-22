@@ -107,8 +107,8 @@ const botConfig = {
   LOG_LEVEL: getEnvVar('LOG_LEVEL', false, 'info'),
 
   // IDs spécifiques (à ajuster selon vos besoins)
-  roleId: '1381014207788613693',
-  channelId: '1385772202716299264',
+  reqRoleId: getEnvVar('REQ_ROLE_ID', false),
+  reqChannelId: getEnvVar('REQ_CHANNEL_ID', false),
 
   // Fonctions utilitaires
   hasAirtable () {
