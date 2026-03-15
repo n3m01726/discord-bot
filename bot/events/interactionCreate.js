@@ -166,7 +166,7 @@ async function handleRateLimit (interaction, userId, commandName) {
 
     await interaction.reply({
       content: `⚠️ ${errorMessage}`,
-      flags: 64 // MessageFlags.Ephemeral
+      ephemeral: true
     });
 
     return { allowed: false };
@@ -197,7 +197,7 @@ async function handleValidationError (
 
   await interaction.reply({
     content: `❌ ${validationResult.error}`,
-    flags: 64 // MessageFlags.Ephemeral
+    ephemeral: true
   });
 }
 
@@ -241,7 +241,7 @@ async function executeWithRetry (
       await interaction.reply({
         content:
           '❌ Une erreur est survenue lors du traitement de votre demande.',
-        flags: 64 // MessageFlags.Ephemeral
+        ephemeral: true
       });
     } else if (interaction.deferred) {
       await interaction.editReply({
@@ -297,16 +297,23 @@ async function handleInteractionResponse (interaction, result, commandName) {
       await interaction.reply({
         content: result.message,
         embeds: result.embeds,
-        flags: result.ephemeral !== false ? 64 : 0 // 64 = MessageFlags.Ephemeral
+        ephemeral: result.ephemeral !== false
       });
     }
   } else {
     logger.warn('Résultat de commande échoué ou null');
-    await interaction.reply({
-      content:
-        '❌ Une erreur est survenue lors du traitement de votre demande.',
-      flags: 64 // MessageFlags.Ephemeral
-    });
+    if (interaction.replied || interaction.deferred) {
+      await interaction.editReply({
+        content:
+          '❌ Une erreur est survenue lors du traitement de votre demande.'
+      });
+    } else {
+      await interaction.reply({
+        content:
+          '❌ Une erreur est survenue lors du traitement de votre demande.',
+        ephemeral: true
+      });
+    }
   }
 }
 
@@ -334,7 +341,7 @@ async function handleInteractionError (interaction, error, startTime) {
     if (!interaction.replied && !interaction.deferred) {
       await interaction.reply({
         content: errorMessage,
-        flags: 64 // MessageFlags.Ephemeral
+        ephemeral: true
       });
     } else if (interaction.deferred) {
       await interaction.editReply({
@@ -360,4 +367,3 @@ async function handleInteractionError (interaction, error, startTime) {
     logger.error('Impossible d\'envoyer la réponse d\'erreur', replyError);
   }
 }
-

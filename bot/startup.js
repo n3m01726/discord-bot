@@ -67,6 +67,13 @@ function startUpdateStatus () {
     }
   })();
 
+  const intervalMs = Number(updateStatus.interval ?? 60000);
+  if (!Number.isFinite(intervalMs) || intervalMs < 10000) {
+    throw new Error(
+      `updateStatus.interval invalide (${updateStatus.interval}). Valeur minimale: 10000ms.`
+    );
+  }
+
   // Configuration de l'intervalle
   updateStatusInterval = setInterval(() => {
     if (typeof updateStatus.execute === 'function') {
@@ -80,7 +87,7 @@ function startUpdateStatus () {
       );
       clearInterval(updateStatusInterval);
     }
-  }, updateStatus.interval);
+  }, intervalMs);
 }
 
 export async function stopBot () {
@@ -103,4 +110,3 @@ export async function stopBot () {
     throw error;
   }
 }
-

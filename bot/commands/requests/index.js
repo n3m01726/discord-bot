@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import askSubcommand from './requests.js';
 import editSubcommand from './requests-edit.js';
 import deleteSubcommand from './requests-delete.js';
@@ -19,10 +19,10 @@ export default {
     const subcommand = interaction.options.getSubcommand();
 
     // Check role permissions for all subcommands
-    if (!interaction.member.roles.cache.has(config.reqRoleId)) {
+    if (!config.reqRoleId || !interaction.member.roles.cache.has(config.reqRoleId)) {
       return await interaction.reply({
         content: '❌ Tu n\'as pas l\'autorisation d\'utiliser cette commande.',
-        flags: MessageFlags.Ephemeral
+        ephemeral: true
       });
     }
 
@@ -38,7 +38,7 @@ export default {
     default:
       return await interaction.reply({
         content: '❌ Sous-commande inconnue.',
-        flags: MessageFlags.Ephemeral
+        ephemeral: true
       });
     }
   }

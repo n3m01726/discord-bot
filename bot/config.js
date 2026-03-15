@@ -88,7 +88,7 @@ const botConfig = {
 
   // Discord - Optionnels
   BOT_ROLE_NAME: getEnvVar('BOT_ROLE_NAME', false, 'soundSHINE'),
-  GUILD_ID: getEnvVar('DEV_GUILD_ID', false),
+  DEV_GUILD_ID: getEnvVar('DEV_GUILD_ID', false),
   CLIENT_ID: getEnvVar('CLIENT_ID', false),
   GUILD_ID: getEnvVar('GUILD_ID', false),
 

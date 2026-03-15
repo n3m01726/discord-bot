@@ -50,6 +50,6 @@ async function updateStatus (client) {
 
 export default {
   name: 'updateStatus',
-  interval: 5000,
+  interval: 10000,
   execute: updateStatus
 };

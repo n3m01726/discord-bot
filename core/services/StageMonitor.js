@@ -180,20 +180,28 @@ class StageMonitor {
   /**
    * Déconnecter le bot d'un stage
    */
-  async disconnectFromStage (connection, guildId, voiceChannel) {
+  async disconnectFromStage(connection, guildId, voiceChannel) {
     try {
-      // Détruire la connexion
+      if (this.isDisconnecting) return;
+      this.isDisconnecting = true;
+  
+      // 1. arrêter la radio
+      radioPlayer?.stop(true);
+      connection?.subscribe(null);
+  
+      // 2. petite pause pour laisser Discord respirer
+      await new Promise(r => setTimeout(r, 500));
+  
+      // 3. détruire la connexion
       connection.destroy();
-
-      // Nettoyer l'enregistrement
+  
       this.unregisterStage(guildId);
-
-      logger.info(`🎭 Bot déconnecté du stage: ${voiceChannel.name} (${guildId})`);
-
-      // Optionnel: envoyer un message dans un canal de log
-      await this.logDisconnection(voiceChannel);
-    } catch (error) {
-      logger.error(`Erreur lors de la déconnexion du stage ${guildId}:`, error);
+  
+      logger.info(`🎭 Bot déconnecté du stage: ${voiceChannel.name}`);
+    } catch (err) {
+      logger.error('Erreur déconnexion stage:', err);
+    } finally {
+      this.isDisconnecting = false;
     }
   }
 

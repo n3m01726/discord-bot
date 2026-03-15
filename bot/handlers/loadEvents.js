@@ -9,6 +9,28 @@ import logger from '../logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function getEventFiles (dirPath) {
+  const files = [];
+
+  if (!fs.existsSync(dirPath)) {
+    return files;
+  }
+
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...getEventFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith('.js')) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
 export async function loadEvents (client, importFn = (src) => import(src)) {
   try {
     const eventsPath = path.join(__dirname, '../events');
@@ -18,7 +40,7 @@ export async function loadEvents (client, importFn = (src) => import(src)) {
       return { loaded: [], failed: [], total: 0 };
     }
 
-    const files = fs.readdirSync(eventsPath).filter((f) => f.endsWith('.js'));
+    const files = getEventFiles(eventsPath);
 
     if (files.length) {
       logger.section('Événements');
@@ -27,8 +49,8 @@ export async function loadEvents (client, importFn = (src) => import(src)) {
     const loadedEvents = [];
     const failedEvents = [];
 
-    for (const file of files) {
-      const filePath = path.join(eventsPath, file);
+    for (const filePath of files) {
+      const file = path.basename(filePath);
 
       try {
         const fileModule = await importFn(pathToFileURL(filePath).href);
@@ -75,4 +97,3 @@ export async function loadEvents (client, importFn = (src) => import(src)) {
     return { loaded: [], failed: [], total: 0 };
   }
 }
-
