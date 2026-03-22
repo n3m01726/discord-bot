@@ -95,17 +95,9 @@ export function xssProtection (req, res, next) {
   res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   // Vérifier les tentatives XSS dans les entrées
-  const xssPatterns = [
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    /javascript:/gi,
-    /on\w+\s*=/gi,
-    /data:text\/html/gi,
-    /vbscript:/gi
-  ];
-
   const checkForXSS = (obj) => {
     if (typeof obj === 'string') {
-      return xssPatterns.some((pattern) => pattern.test(obj));
+      return validator.containsDangerousHtml(obj);
     }
     if (typeof obj === 'object' && obj !== null) {
       return Object.values(obj).some((value) => checkForXSS(value));
@@ -501,4 +493,3 @@ export const adminSecurityMiddleware = [
   dosProtection,
   validatePermissions(['ManageGuild', 'ManageRoles'])
 ];
-
