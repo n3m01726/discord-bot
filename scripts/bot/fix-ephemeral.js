@@ -29,7 +29,9 @@ function processFile (filePath) {
         const importMatch = content.match(/import\s+{[^}]*}\s+from\s+['"]discord\.js['"]/);
         if (importMatch) {
           // Ajouter MessageFlags à l'import existant
-          content = content.replace(importMatch[0], importMatch[0].replace('}', ', MessageFlags }'));
+          content = content.replace(importMatch[0], () => (
+            importMatch[0].replace('}', ', MessageFlags }')
+          ));
         } else {
           // Ajouter un nouvel import
           content = `import { MessageFlags } from 'discord.js';\n${content}`;

@@ -35,7 +35,7 @@ config({ path: resolve(projectRoot, ".env") });
 import validator from "../utils/core/validation.js";
 import rateLimiter from "../utils/core/rateLimiter.js";
 import { secureLogger } from "../utils/core/secureLogger.js";
-import { securityMiddleware } from "../core/middleware/security.js";
+import { xssProtection } from "../core/middleware/security.js";
 
 describe("Security Tests", () => {
   beforeEach(() => {
@@ -80,6 +80,15 @@ describe("Security Tests", () => {
       const result = validator.sanitizeString(input, { escapeHtml: true });
       expect(result).not.toContain("<script>");
       expect(result).not.toContain("alert");
+    });
+
+    it("should detect dangerous inline HTML handlers", () => {
+      expect(validator.containsDangerousHtml('<img src="x" onerror="alert(1)">')).toBe(true);
+      expect(validator.containsDangerousHtml("Bonjour tout le monde")).toBe(false);
+    });
+
+    it("should ignore long benign strings starting with repeated on", () => {
+      expect(validator.containsDangerousHtml("on".repeat(10000))).toBe(false);
     });
 
     it("should validate valid URL", () => {
@@ -236,6 +245,30 @@ describe("Security Tests", () => {
       }).not.toThrow();
     });
 
+    it("should block XSS payloads in middleware", () => {
+      const req = {
+        body: { content: '<script>alert("xss")</script>' },
+        query: {},
+        params: {},
+        url: "/test",
+        method: "POST",
+        ip: "127.0.0.1",
+        get: vi.fn(() => "vitest"),
+      };
+      const res = {
+        set: vi.fn(),
+        status: vi.fn(() => ({
+          json: vi.fn((payload) => payload),
+        })),
+      };
+      const next = vi.fn();
+
+      xssProtection(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(next).not.toHaveBeenCalled();
+    });
+
     it("should integrate logging and masking", () => {
       const userId = "123456789012345678";
       const sensitiveData = {
@@ -354,4 +387,3 @@ describe("Security Tests", () => {
     });
   });
 });
-
