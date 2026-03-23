@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { maskSensitiveData, secureLogger } from "../utils/core/secureLogger.js";
+import { maskSensitiveData, secureLogger } from "../utils/shared/secureLogger.js";
 
 // Mock du logger pour éviter les effets de bord
 vi.mock("../bot/logger.js", () => ({

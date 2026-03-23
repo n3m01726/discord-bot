@@ -32,9 +32,9 @@ const projectRoot = resolve(__dirname, "..");
 config({ path: resolve(projectRoot, ".env") });
 
 // Importer les modules de sécurité
-import validator from "../utils/core/validation.js";
-import rateLimiter from "../utils/core/rateLimiter.js";
-import { secureLogger } from "../utils/core/secureLogger.js";
+import validator from "../utils/shared/validation.js";
+import rateLimiter from "../utils/shared/rateLimiter.js";
+import { secureLogger } from "../utils/shared/secureLogger.js";
 import { xssProtection } from "../core/middleware/security.js";
 
 describe("Security Tests", () => {

@@ -238,38 +238,57 @@ vi.mock("../utils/genres.js", () => ({
   ],
 }));
 
-vi.mock("../utils/cache.js", () => {
+vi.mock("../utils/bot/cache.js", () => {
   const storage = {};
   const expirations = {};
 
-  return {
-    cache: {
-      set: vi.fn().mockImplementation((key, value, ttl) => {
-        storage[key] = value;
-        if (ttl) {
-          expirations[key] = Date.now() + ttl;
-        }
-      }),
-      get: vi.fn().mockImplementation((key) => {
-        // Vérifier l'expiration
-        if (expirations[key] && Date.now() > expirations[key]) {
-          delete storage[key];
-          delete expirations[key];
-          return null;
-        }
-        return storage[key] || null;
-      }),
-      clear: vi.fn().mockImplementation((key) => {
+  const cache = {
+    set: vi.fn().mockImplementation((key, value, ttl) => {
+      storage[key] = value;
+      if (ttl) {
+        expirations[key] = Date.now() + ttl;
+      }
+    }),
+    get: vi.fn().mockImplementation((key) => {
+      // Vérifier l'expiration
+      if (expirations[key] && Date.now() > expirations[key]) {
         delete storage[key];
         delete expirations[key];
-      }),
-      getStats: vi.fn().mockReturnValue({
-        size: Object.keys(storage).length,
-        hits: 0,
-        misses: 0,
-        hitRate: 0,
-      }),
-    },
+        return null;
+      }
+      return storage[key] || null;
+    }),
+    clear: vi.fn().mockImplementation((key) => {
+      if (typeof key === "undefined") {
+        Object.keys(storage).forEach((entryKey) => delete storage[entryKey]);
+        Object.keys(expirations).forEach((entryKey) => delete expirations[entryKey]);
+        return;
+      }
+
+      delete storage[key];
+      delete expirations[key];
+    }),
+    getOrSet: vi.fn().mockImplementation(async (key, fetcher, ttl) => {
+      const existing = cache.get(key);
+      if (existing !== null) {
+        return existing;
+      }
+
+      const value = await fetcher();
+      cache.set(key, value, ttl);
+      return value;
+    }),
+    getStats: vi.fn().mockReturnValue({
+      size: Object.keys(storage).length,
+      hits: 0,
+      misses: 0,
+      hitRate: 0,
+    }),
+  };
+
+  return {
+    cache,
+    default: cache,
   };
 });
 

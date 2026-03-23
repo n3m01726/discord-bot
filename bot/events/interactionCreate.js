@@ -4,13 +4,13 @@
 
 import { Events } from 'discord.js';
 import AppState from '../../core/services/AppState.js';
-import { RetryManager } from '../../utils/core/retry.js';
-import { checkRateLimit, recordCommand } from '../../utils/core/rateLimiter.js';
+import { RetryManager } from '../../utils/shared/retry.js';
+import { checkRateLimit, recordCommand } from '../../utils/shared/rateLimiter.js';
 import {
   secureLogger,
   secureAudit,
   secureSecurityAlert
-} from '../../utils/core/secureLogger.js';
+} from '../../utils/shared/secureLogger.js';
 import logger from '../logger.js';
 
 // Mode logs compacts: ne garder que start/success et erreurs

@@ -6,26 +6,19 @@ import "dotenv/config";
 import { startBot, stopBot } from "./bot/startup.js";
 import WebServer from "./api/index.js";
 import logger from "./bot/logger.js";
-import { getGlobalConfig } from "./utils/bot/globalConfig.js";
+import config from "./bot/config.js";
 import { database } from "./utils/database/database.js";
 import appState from "./core/services/AppState.js";
-import { retryDiscord, retry } from "./utils/core/retry.js";
+import { retryDiscord, retry } from "./utils/shared/retry.js";
 import { registerProcessHandlers } from "./core/lifecycle.js";
 import pkg from "./package.json" with { type: "json" };
 import logMemory from './bot/tasks/logMemory.js';
-let config;
 let botClient = null;
 let apiServer = null;
 let isShuttingDown = false;
 
-try {
-  config = getGlobalConfig();
-  appState.initialize();
-  appState.setConfigLoaded(config);
-} catch (error) {
-  logger.error("Erreur de configuration:", error);
-  process.exit(1);
-}
+appState.initialize();
+appState.setConfigLoaded(config);
 
 async function gracefulShutdown(signal = "UNKNOWN") {
   if (isShuttingDown) return;
@@ -83,8 +76,8 @@ async function startApplication() {
     logger.banner("Initialisation du serveur API...");
     await retry(
       async () => {
-        await apiServer.start(config.api.port);
-        appState.setApiRunning(true, config.api.port);
+        await apiServer.start(config.API_PORT);
+        appState.setApiRunning(true, config.API_PORT);
       },
       {
         onRetry: (error, attempt) =>
@@ -92,7 +85,7 @@ async function startApplication() {
       }
     );
 
-    logger.success(`API en ligne sur le port ${config.api.port}`);
+    logger.success(`API en ligne sur le port ${config.API_PORT}`);
     registerProcessHandlers({ gracefulShutdown });
 
     logger.api("Routes API disponibles : /v1/metrics, /v1/health, /v1/logs, /v1/alerts, v1/send-playlist");
