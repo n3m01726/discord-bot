@@ -2,9 +2,9 @@
 // core/middleware/security.js - Middlewares de sécurité pour Express
 // ========================================
 
-import rateLimiter from '../../utils/core/rateLimiter.js';
-import validator from '../../utils/core/validation.js';
-import { secureLogger } from '../../utils/core/secureLogger.js';
+import rateLimiter from '../../utils/shared/rateLimiter.js';
+import validator from '../../utils/shared/validation.js';
+import { secureLogger } from '../../utils/shared/secureLogger.js';
 
 /**
  * Middleware de validation des entrées

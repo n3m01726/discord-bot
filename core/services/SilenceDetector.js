@@ -5,7 +5,7 @@
 import axios from 'axios';
 import logger from '../../bot/logger.js';
 import config from '../../bot/config.js';
-import cache from '../../utils/cache.js';
+import cache from '../../utils/bot/cache.js';
 
 class SilenceDetector {
   constructor () {
@@ -122,7 +122,7 @@ class SilenceDetector {
    */
   async detectAudioActivity () {
     try {
-      const response = await cache.get(this.config.jsonUrl, async () => {
+      const response = await cache.getOrSet(this.config.jsonUrl, async () => {
         // Utiliser l'import statique d'axios défini en haut du fichier
         return axios.get(this.config.jsonUrl, {
           timeout: 5000,

@@ -1,4 +1,4 @@
-import { cache } from "../../utils/cache/cache.js";
+import cache from "../../utils/bot/cache.js";
 
 describe("cache helper", () => {
   beforeEach(() => {

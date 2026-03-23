@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { RetryManager, retry } from "../utils/core/retry.js";
+import { RetryManager, retry } from "../utils/shared/retry.js";
 
 // Mock du logger pour éviter les effets de bord
 vi.mock("../bot/logger.js", () => ({

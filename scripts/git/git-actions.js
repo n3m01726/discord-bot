@@ -144,7 +144,7 @@ async function runGitActions () {
   const jsFiles = [
     'index.js',
     'api/server.js',
-    'core/config.js',
+    'bot/config.js',
     'core/loadFiles.js',
     'utils/logger.js',
     'utils/errorHandler.js'

@@ -1,5 +1,5 @@
 // ========================================
-// utils/cache.js - Système de cache en mémoire avec TTL
+// utils/bot/cache.js - Système de cache en mémoire avec TTL
 // ========================================
 
 import logger from "../../bot/logger.js";
@@ -261,7 +261,7 @@ class Cache {
 }
 
 // Instance singleton
-const cache = new Cache();
+export const cache = new Cache();
 
 // Gestion de l'arrêt propre
 process.on("SIGINT", () => cache.destroy());
