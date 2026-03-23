@@ -11,7 +11,7 @@ import { database } from "./utils/database/database.js";
 import appState from "./core/services/AppState.js";
 import { retryDiscord, retry } from "./utils/shared/retry.js";
 import { registerProcessHandlers } from "./core/lifecycle.js";
-import pkg from "./package.json" with { type: "json" };
+import pkg from "../package.json" with { type: "json" };
 import logMemory from './bot/tasks/logMemory.js';
 let botClient = null;
 let apiServer = null;
