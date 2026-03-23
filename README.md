@@ -2,8 +2,6 @@
 
 Bot Discord pour diffuser **soundSHINE RADIO** dans un Stage Channel, exposer des métriques via API, et automatiser des actions autour de la station (playlist, monitoring, alertes, statut speaker, etc.).
 
-[![CI/CD Pipeline](https://github.com/n3m01726/soundshine-bot/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/n3m01726/soundshine-bot/actions/workflows/ci-cd.yml)
-
 ---
 
 ## ✨ Fonctionnalités
