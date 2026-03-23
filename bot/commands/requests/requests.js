@@ -1,4 +1,4 @@
-import { MessageFlags } from 'discord.js';
+import { MessageFlags } from '#discord';
 import { database as db } from '../../../utils/database/database.js';
 import { validateURL } from '../../../utils/bot/validateURL.js';
 import { genres } from '../../../utils/bot/genres.js';

@@ -1,7 +1,7 @@
 // utils/yodaify-reply.js
 import { isYodaEnabled } from "./yoda-config.js";
 import { yodaify } from "./yoda.js";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction } from "#discord";
 import logger from "../../bot/logger.js";
 
 export function enableYodaReplyPatch() {

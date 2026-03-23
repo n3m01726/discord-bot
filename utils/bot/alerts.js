@@ -2,7 +2,7 @@
 // utils/alerts.js - Système d'alertes avancé
 // ========================================
 import os from "os";
-import { WebhookClient, EmbedBuilder } from "discord.js";
+import { WebhookClient, EmbedBuilder } from "#discord";
 import logger from "../../bot/logger.js";
 
 class AlertManager {

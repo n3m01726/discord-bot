@@ -26,13 +26,15 @@ function processFile (filePath) {
 
       // Ajouter l'import MessageFlags si pas présent
       if (!content.includes('MessageFlags')) {
-        const importMatch = content.match(/import\s+{[^}]*}\s+from\s+['"]discord\.js['"]/);
+        const importMatch = content.match(/import\s+{[^}]*}\s+from\s+['"](?:discord\.js|#discord)['"]/);
         if (importMatch) {
           // Ajouter MessageFlags à l'import existant
-          content = content.replace(importMatch[0], importMatch[0].replace('}', ', MessageFlags }'));
+          content = content.replace(importMatch[0], () => (
+            importMatch[0].replace('}', ', MessageFlags }')
+          ));
         } else {
           // Ajouter un nouvel import
-          content = `import { MessageFlags } from 'discord.js';\n${content}`;
+          content = `import { MessageFlags } from '#discord';\n${content}`;
         }
         modified = true;
       }

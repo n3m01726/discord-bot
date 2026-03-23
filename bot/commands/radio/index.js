@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder } from '#discord';
 import playSubcommand from './play.js';
 import stopSubcommand from './stop.js';
 import nowplayingSubcommand from './nowplaying.js';

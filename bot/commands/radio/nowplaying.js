@@ -1,4 +1,4 @@
-import { MessageFlags } from 'discord.js';
+import { MessageFlags } from '#discord';
 import axios from 'axios';
 import config from '../../config.js';
 import logger from '../../logger.js';

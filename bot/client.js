@@ -2,7 +2,7 @@
 // bot/client.js (ESM) - Singleton Discord Client robuste
 // ========================================
 
-import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import { Client, GatewayIntentBits, Collection } from '#discord';
 import logger from './logger.js';
 
 class DiscordClientSingleton {

@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from '#discord';
 
 /**
  * Crée un embed Discord standardisé pour Soundshine

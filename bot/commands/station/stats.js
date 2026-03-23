@@ -4,7 +4,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   MessageFlags
-} from 'discord.js';
+} from '#discord';
 import axios from 'axios';
 import config from '../../config.js';
 import logger from '../../logger.js';

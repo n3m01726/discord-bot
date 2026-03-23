@@ -2,7 +2,7 @@
 // core/monitor.js - Gestion centralisée des erreurs et monitoring optimisé
 // ========================================
 
-import { MessageFlags } from 'discord.js';
+import { MessageFlags } from '#discord';
 import logger from '../bot/logger.js';
 import appState from './services/AppState.js';
 

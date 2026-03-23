@@ -12,6 +12,9 @@
   },
   "main": "index.js",
   "type": "module",
+  "imports": {
+    "#discord": "./utils/discord.js"
+  },
   "license": "ISC",
   "author": "",
   "private": false,

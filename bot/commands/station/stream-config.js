@@ -2,7 +2,7 @@
 // bot/commands/station/stream-config.js - Diagnostic de la configuration du stream
 // ========================================
 
-import { ChannelType, EmbedBuilder } from 'discord.js';
+import { ChannelType, EmbedBuilder } from '#discord';
 import logger from '../../logger.js';
 import config from '../../config.js';
 

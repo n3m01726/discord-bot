@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import nowplayingCommand from "../../bot/commands/radio/nowplaying.js";
-import { MessageFlags } from "discord.js";
+import { MessageFlags } from "#discord";
 import axios from "axios";
 
 vi.mock("axios");

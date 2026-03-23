@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from '#discord';
 import scheduleSubcommand from './schedule.js';
 import statsSubcommand from './stats.js';
 import speakerStatusSubcommand from './speaker-status.js';

@@ -2,7 +2,7 @@
 // bot/events/interactionCreate.js - Point d'entrée principal pour les interactions Discord
 // ========================================
 
-import { Events } from 'discord.js';
+import { Events } from '#discord';
 import AppState from '../../core/services/AppState.js';
 import { RetryManager } from '../../utils/core/retry.js';
 import { checkRateLimit, recordCommand } from '../../utils/core/rateLimiter.js';
