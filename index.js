@@ -9,7 +9,7 @@ import logger from "./bot/logger.js";
 import config from "./bot/config.js";
 import { database } from "./utils/database/database.js";
 import appState from "./core/services/AppState.js";
-import { retryDiscord, retry } from "./utils/core/retry.js";
+import { retryDiscord, retry } from "./utils/shared/retry.js";
 import { registerProcessHandlers } from "./core/lifecycle.js";
 import pkg from "./package.json" with { type: "json" };
 import logMemory from './bot/tasks/logMemory.js';
