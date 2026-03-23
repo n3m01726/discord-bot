@@ -1,4 +1,4 @@
-import { ChannelType } from '#discord';
+import { ChannelType } from 'discord.js';
 import logger from '../../logger.js';
 
 export default {

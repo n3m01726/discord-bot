@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../config.js';
-import { ActivityType } from '#discord';
+import { ActivityType } from 'discord.js';
 import logger from '../logger.js';
 import monitor from '../../core/monitor.js';
 

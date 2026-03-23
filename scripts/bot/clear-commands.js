@@ -1,5 +1,5 @@
 // clear-commands.js
-import { REST, Routes } from '#discord';
+import { REST, Routes } from 'discord.js';
 import config from '../../bot/config.js';
 import logger from '../../bot/logger.js';
 

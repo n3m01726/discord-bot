@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '#discord';
+import { SlashCommandBuilder } from 'discord.js';
 import askSubcommand from './requests.js';
 import editSubcommand from './requests-edit.js';
 import deleteSubcommand from './requests-delete.js';

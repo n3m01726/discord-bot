@@ -1,5 +1,5 @@
 // scripts/bot/deploy-commands.js
-import { REST, Routes } from "#discord";
+import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";

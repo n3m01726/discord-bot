@@ -2,7 +2,7 @@
 // bot/commands/station/speaker-status.js - Vérification du statut speaker
 // ========================================
 
-import { ChannelType, EmbedBuilder } from '#discord';
+import { ChannelType, EmbedBuilder } from 'discord.js';
 import { getVoiceConnection } from '@discordjs/voice';
 import logger from '../../logger.js';
 import stageSpeakerManager from '../../../core/services/StageSpeakerManager.js';

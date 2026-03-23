@@ -2,7 +2,7 @@
 // core/services/StageSpeakerManager.js - Gestion de l'auto-promotion en speaker
 // ========================================
 
-import { PermissionFlagsBits } from '#discord';
+import { PermissionFlagsBits } from 'discord.js';
 import logger from '../../bot/logger.js';
 
 class StageSpeakerManager {

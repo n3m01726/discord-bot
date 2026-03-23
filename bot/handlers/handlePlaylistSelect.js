@@ -3,7 +3,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle
-} from '#discord';
+} from 'discord.js';
 import logger from '../logger.js';
 import monitor from '../../core/monitor.js';
 

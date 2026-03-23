@@ -2,7 +2,7 @@
 // bot/commands/station/promote-speaker.js - Promotion manuelle en speaker
 // ========================================
 
-import { ChannelType } from '#discord';
+import { ChannelType } from 'discord.js';
 import { getVoiceConnection } from '@discordjs/voice';
 import logger from '../../logger.js';
 import stageSpeakerManager from '../../../core/services/StageSpeakerManager.js';

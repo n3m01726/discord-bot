@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '#discord';
+import { SlashCommandBuilder } from 'discord.js';
 import { createEmbed } from '../../utils/embedHelper.js';
 
 export default {

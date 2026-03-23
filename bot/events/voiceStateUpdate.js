@@ -2,7 +2,7 @@
 // bot/events/voiceStateUpdate.js - Gestion des changements d'état vocal
 // ========================================
 
-import { Events } from '#discord';
+import { Events } from 'discord.js';
 import logger from '../logger.js';
 import stageMonitor from '../../core/services/StageMonitor.js';
 

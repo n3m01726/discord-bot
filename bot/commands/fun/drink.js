@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '#discord';
+import { SlashCommandBuilder } from 'discord.js';
 
 const drinks = [
   'Mojito 🍃',

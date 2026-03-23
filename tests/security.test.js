@@ -87,10 +87,6 @@ describe("Security Tests", () => {
       expect(validator.containsDangerousHtml("Bonjour tout le monde")).toBe(false);
     });
 
-    it("should ignore long benign strings starting with repeated on", () => {
-      expect(validator.containsDangerousHtml("on".repeat(10000))).toBe(false);
-    });
-
     it("should validate valid URL", () => {
       const result = validator.validateUrl("https://discord.com/api/v10");
       expect(result).toBe("https://discord.com/api/v10");

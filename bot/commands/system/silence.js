@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits } from '#discord';
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import getSilenceDetector from '../../../core/services/SilenceDetector.js';
 import logger from '../../logger.js';
 

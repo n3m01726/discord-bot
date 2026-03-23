@@ -8,7 +8,7 @@ import {
   ButtonStyle,
   EmbedBuilder,
   MessageFlags
-} from '#discord';
+} from 'discord.js';
 import logger from '../../logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
