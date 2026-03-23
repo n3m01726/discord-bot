@@ -253,64 +253,7 @@ class InputValidator {
       || normalized.includes(`java${'script:'}`)
       || normalized.includes(`vb${'script:'}`)
       || normalized.includes('data:text/html')
-      || this.containsInlineEventHandler(normalized);
-  }
-
-  /**
-   * Détecter de manière linéaire les attributs HTML inline du type onerror=
-   */
-  containsInlineEventHandler (text) {
-    for (let index = 0; index < text.length - 2; index++) {
-      if (text[index] !== 'o' || text[index + 1] !== 'n') {
-        continue;
-      }
-
-      const previousCharacter = index === 0 ? '' : text[index - 1];
-      if (this.isAttributeNameCharacter(previousCharacter)) {
-        continue;
-      }
-
-      let cursor = index + 2;
-      while (cursor < text.length && this.isAttributeNameCharacter(text[cursor])) {
-        cursor++;
-      }
-
-      if (cursor === index + 2) {
-        continue;
-      }
-
-      while (cursor < text.length && this.isWhitespaceCharacter(text[cursor])) {
-        cursor++;
-      }
-
-      if (text[cursor] === '=') {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * Vérifier si un caractère peut faire partie d'un nom d'attribut HTML
-   */
-  isAttributeNameCharacter (character) {
-    return (character >= 'a' && character <= 'z')
-      || (character >= 'A' && character <= 'Z')
-      || (character >= '0' && character <= '9')
-      || character === '_'
-      || character === '-';
-  }
-
-  /**
-   * Vérifier si un caractère est un espace HTML courant
-   */
-  isWhitespaceCharacter (character) {
-    return character === ' '
-      || character === '\n'
-      || character === '\r'
-      || character === '\t'
-      || character === '\f';
+      || (/on\w+\s*=/).test(normalized);
   }
 
   /**
