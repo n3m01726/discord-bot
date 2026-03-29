@@ -297,7 +297,6 @@ async function handleInteractionResponse (interaction, result, commandName) {
       await interaction.reply({
         content: result.message,
         embeds: result.embeds,
-        components: result.components,
         ephemeral: result.ephemeral !== false
       });
     }
