@@ -3,7 +3,6 @@
 // ========================================
 
 import logger from '../logger.js';
-import { handleTempVcButton, handleTempVcModal, isTempVcButton } from '../services/tempVcService.js';
 const COMPACT_LOGS = process.env.COMPACT_LOGS === 'true';
 
 /**
@@ -162,11 +161,6 @@ async function handleButton (interaction) {
   try {
     logger.info(`Traitement du bouton: ${customId}`);
 
-    if (isTempVcButton(customId)) {
-      const result = await handleTempVcButton(interaction);
-      if (result) return result;
-    }
-
     // Ici vous pourriez avoir un système de handlers de boutons
     // Pour l'exemple, on traite quelques cas courants
 
@@ -252,11 +246,6 @@ async function handleModal (interaction) {
 
   try {
     logger.info(`Traitement du modal: ${customId}`);
-
-    const tempVcResult = await handleTempVcModal(interaction);
-    if (tempVcResult) {
-      return tempVcResult;
-    }
 
     // Récupérer les valeurs des champs
     const fields = {};

@@ -5,7 +5,6 @@
 import { Events } from 'discord.js';
 import logger from '../logger.js';
 import stageMonitor from '../../core/services/StageMonitor.js';
-import { handleJoinToCreate } from '../services/tempVcService.js';
 
 export default {
   name: Events.VoiceStateUpdate,
@@ -13,9 +12,6 @@ export default {
     try {
       // Gérer les changements d'état vocal pour le monitoring des stages
       stageMonitor.handleVoiceStateUpdate(oldState, newState);
-
-      // Gérer le système Join-to-Create des salons temporaires
-      await handleJoinToCreate(oldState, newState);
 
       logger.debug('🎭 Événement VoiceStateUpdate traité', {
         guildId: newState.guild.id,
