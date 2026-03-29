@@ -47,7 +47,7 @@ export default {
 
     // Utiliser interaction.client comme fallback si AppState.client est undefined
     const discordClient = client || interaction.client;
-    const discordConfig = (await import('../../../bot/config.js')).default;
+    const discordConfig = (await import('../../bot/config.js')).default;
 
     try {
       // Validation de base de l'interaction
@@ -297,6 +297,7 @@ async function handleInteractionResponse (interaction, result, commandName) {
       await interaction.reply({
         content: result.message,
         embeds: result.embeds,
+        components: result.components,
         ephemeral: result.ephemeral !== false
       });
     }
