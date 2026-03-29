@@ -1,6 +1,6 @@
 # 🎧 soundSHINE Bot
 
-Bot Discord pour diffuser **soundSHINE RADIO** dans un Stage Channel, exposer des métriques via API, et automatiser des actions autour de la station (playlist, monitoring, alertes, statut speaker, etc.).
+Bot Discord pour diffuser **soundSHINE Radio** dans un Stage Channel, exposer des métriques via API, et automatiser des actions autour de la station (playlist, monitoring, alertes, statut speaker, etc.).
 
 ---
 
