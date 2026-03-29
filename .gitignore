@@ -5,6 +5,7 @@
 # ========================================
 # Logs et fichiers de diagnostic
 # ========================================
+scripts/
 logs/
 *.log
 npm-debug.log*
