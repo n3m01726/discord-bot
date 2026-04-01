@@ -13,23 +13,23 @@ class StageSpeakerManager {
       PermissionFlagsBits.RequestToSpeak
     ];
 
-    logger.info('StageSpeakerManager initialisé');
+    logger.info('StageSpeakerManager initialisÃ©');
   }
 
   /**
-   * Vérifier si le bot a les permissions nécessaires pour s'auto-promouvoir
+   * VÃ©rifier si le bot a les permissions nÃ©cessaires pour s'auto-promouvoir
    */
   checkBotPermissions (guild, channel) {
     try {
       const botMember = guild.members.me;
       if (!botMember) {
-        logger.error('🎤 Bot member introuvable dans le guild');
+        logger.error('ðŸŽ¤ Bot member introuvable dans le guild');
         return { hasPermissions: false, missingPermissions: this.requiredPermissions };
       }
 
       const channelPermissions = channel.permissionsFor(botMember);
       if (!channelPermissions) {
-        logger.error('🎤 Impossible de récupérer les permissions du canal');
+        logger.error('ðŸŽ¤ Impossible de rÃ©cupÃ©rer les permissions du canal');
         return { hasPermissions: false, missingPermissions: this.requiredPermissions };
       }
 
@@ -38,7 +38,7 @@ class StageSpeakerManager {
 
       const hasPermissions = missingPermissions.length === 0;
 
-      logger.debug('🎤 Vérification des permissions:', {
+      logger.debug('ðŸŽ¤ VÃ©rification des permissions:', {
         hasPermissions,
         missingPermissions: missingPermissions.map(p => PermissionFlagsBits[p]),
         channelId: channel.id,
@@ -47,7 +47,7 @@ class StageSpeakerManager {
 
       return { hasPermissions, missingPermissions };
     } catch (error) {
-      logger.error('🎤 Erreur lors de la vérification des permissions:', error);
+      logger.error('ðŸŽ¤ Erreur lors de la vÃ©rification des permissions:', error);
       return { hasPermissions: false, missingPermissions: this.requiredPermissions };
     }
   }
@@ -61,12 +61,11 @@ class StageSpeakerManager {
         throw new Error('Connexion ou canal manquant');
       }
 
-      // Vérifier les permissions d'abord
       const { hasPermissions, missingPermissions } = this.checkBotPermissions(channel.guild, channel);
 
       if (!hasPermissions) {
         const missingNames = missingPermissions.map(p => PermissionFlagsBits[p]).join(', ');
-        logger.warn(`🎤 Permissions manquantes pour l'auto-promotion: ${missingNames}`);
+        logger.warn(`ðŸŽ¤ Permissions manquantes pour l'auto-promotion: ${missingNames}`);
         return {
           success: false,
           error: 'INSUFFICIENT_PERMISSIONS',
@@ -75,44 +74,41 @@ class StageSpeakerManager {
         };
       }
 
-      // Tenter de promouvoir le bot
-      logger.info('🎤 Tentative de promotion du bot en speaker...');
+      logger.info('ðŸŽ¤ Tentative de promotion du bot en speaker...');
 
-      // Dans discord.js v14, on utilise setSuppressed(false) pour promouvoir en speaker
       const botMember = channel.guild.members.me;
-if (!botMember.voice.channelId) {
-    throw new Error('Bot not connected to voice');
-}
+      if (!botMember?.voice?.channelId) {
+        throw new Error('Bot not connected to voice');
+      }
 
-await botMember.voice.setSuppressed(false);
+      await botMember.voice.setSuppressed(false);
 
-      logger.success('🎤 Bot promu en speaker avec succès');
+      logger.success('ðŸŽ¤ Bot promu en speaker avec succÃ¨s');
 
       return {
         success: true,
-        message: 'Bot promu en speaker avec succès'
+        message: 'Bot promu en speaker avec succÃ¨s'
       };
     } catch (error) {
-      if (error.code === 'DiscordAPIError[50013]' || error.name === 'DiscordAPIError' && error.message.includes('permissions')) {
-        errorType = 'INSUFFICIENT_PERMISSIONS';
-        userMessage = 'Le bot n\'est pas Stage Moderator (permission "Gérer le canal" manquante dans le stage)';
-    }
-      logger.error('🎤 Erreur lors de la promotion en speaker:', error);
-
-      // Analyser le type d'erreur
       let errorType = 'UNKNOWN_ERROR';
       let userMessage = 'Erreur inconnue lors de la promotion en speaker';
 
-      if (error.code === 50013) {
+      if (
+        error.code === 50013
+        || error.code === 'DiscordAPIError[50013]'
+        || (error.name === 'DiscordAPIError' && error.message.includes('permissions'))
+      ) {
         errorType = 'INSUFFICIENT_PERMISSIONS';
-        userMessage = 'Permissions insuffisantes pour la promotion en speaker';
+        userMessage = 'Le bot n\'est pas Stage Moderator (permission "GÃ©rer le canal" manquante dans le stage)';
       } else if (error.code === 50001) {
         errorType = 'MISSING_ACCESS';
-        userMessage = 'Accès manquant au canal vocal';
+        userMessage = 'AccÃ¨s manquant au canal vocal';
       } else if (error.message.includes('suppressed')) {
         errorType = 'SUPPRESSION_ERROR';
         userMessage = 'Erreur lors de la modification du statut de suppression';
       }
+
+      logger.error('ðŸŽ¤ Erreur lors de la promotion en speaker:', error);
 
       return {
         success: false,
@@ -124,7 +120,7 @@ await botMember.voice.setSuppressed(false);
   }
 
   /**
-   * Vérifier le statut actuel du bot dans le stage
+   * VÃ©rifier le statut actuel du bot dans le stage
    */
   getBotStageStatus (guild, channel) {
     try {
@@ -149,7 +145,7 @@ await botMember.voice.setSuppressed(false);
         channelId: botMember.voice.channelId
       };
     } catch (error) {
-      logger.error('🎤 Erreur lors de la vérification du statut du stage:', error);
+      logger.error('ðŸŽ¤ Erreur lors de la vÃ©rification du statut du stage:', error);
       return {
         isConnected: false,
         isSpeaker: false,
@@ -160,7 +156,7 @@ await botMember.voice.setSuppressed(false);
   }
 
   /**
-   * Obtenir des informations détaillées sur les permissions et le statut
+   * Obtenir des informations dÃ©taillÃ©es sur les permissions et le statut
    */
   getDetailedStatus (guild, channel, _connection) {
     const permissions = this.checkBotPermissions(guild, channel);
@@ -181,7 +177,7 @@ await botMember.voice.setSuppressed(false);
     const permissionNames = {
       [PermissionFlagsBits.Connect]: 'Se connecter',
       [PermissionFlagsBits.Speak]: 'Parler',
-      [PermissionFlagsBits.RequestToSpeak]: 'Demander à parler'
+      [PermissionFlagsBits.RequestToSpeak]: 'Demander Ã  parler'
     };
 
     return missingPermissions.map(permission =>
@@ -189,7 +185,6 @@ await botMember.voice.setSuppressed(false);
   }
 }
 
-// Instance singleton
 const stageSpeakerManager = new StageSpeakerManager();
 
 export default stageSpeakerManager;

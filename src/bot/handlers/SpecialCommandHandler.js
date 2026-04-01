@@ -116,7 +116,7 @@ async function handlePlayCommand (interaction) {
     logger.info('💾 Audio sauvegardé dans client.audio');
 
     // 🎭 Enregistrer le stage pour surveillance automatique
-    stageMonitor.registerStage(channel.guild.id, channel.id);
+    stageMonitor.registerStage(channel.guild.id, channel.id, channel.guild);
     logger.info('🎭 Stage enregistré pour surveillance automatique');
 
     // 🔁 Sécurité si le stream prend trop de temps
