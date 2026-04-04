@@ -1,57 +1,42 @@
-# 🎧 soundSHINE Bot
+# soundSHINE Bot
 
-Bot Discord pour diffuser **soundSHINE RADIO** dans un Stage Channel, exposer des métriques via API, et automatiser des actions autour de la station (playlist, monitoring, alertes, statut speaker, etc.).
+Bot Discord pour diffuser soundSHINE Radio dans un Stage Channel, exposer des metriques via une API Express et automatiser quelques actions autour de la station.
 
----
+## Apercu
 
-## ✨ Fonctionnalités
+- Commandes slash organisees par domaines: radio, station, requests, systeme, fun.
+- Lecture du stream dans un Stage Channel et suivi d'etat du bot.
+- API HTTP securisee pour la sante, les logs, les alertes, les metriques et la mise a jour de playlist.
+- Suite de tests Vitest et scripts utilitaires de developpement.
 
-### Côté Discord
-- Lecture du stream radio dans un **Stage Channel**.
-- Commandes slash organisées par domaines : radio, station, requests, système, fun.
-- Contrôle des permissions (rôles admin / rôles dédiés aux requests).
-- Détection de silence + commandes de pilotage.
-
-### Côté API
-- API Express sécurisée avec middlewares de protection (helmet, validation, rate-limit, etc.).
-- Endpoints de santé, logs, alertes, métriques JSON/Prometheus.
-- Endpoint d’ingestion playlist (`/v1/send-playlist`) protégé par token API.
-
-### Observabilité / qualité
-- Logs structurés.
-- Suite de tests (unitaires, intégration, performance, stress, sécurité).
-- Outils scripts pour déploiement des commandes et diagnostic.
-
----
-
-## 🧱 Architecture du projet
+## Structure du projet
 
 ```text
 .
-├── bot/                 # Client Discord, commandes, events, handlers, tâches
-├── api/                 # Serveur Express, middlewares et routes HTTP
-├── core/                # Services métier (stage, silence, état applicatif, sécurité)
-├── utils/               # Utilitaires (cache, DB, retry, métriques, validation)
-├── tests/               # Tests Vitest (unitaires + intégration + perf + stress)
-├── scripts/             # Scripts dev, bot, infra, git, outils
-└── index.js             # Point d’entrée (lance bot + API)
+|-- src/
+|   |-- api/        # Serveur Express, middlewares et routes HTTP
+|   |-- bot/        # Client Discord, commandes, events, handlers et taches
+|   |-- core/       # Services metier et cycle de vie de l'application
+|   |-- tests/      # Tests Vitest
+|   `-- utils/      # Utilitaires partages et acces DB
+|-- scripts/        # Scripts dev, infra, git et outils
+|-- docs/           # Documentation additionnelle
+`-- package.json
 ```
 
----
+Point d'entree de l'application: [`src/index.js`](/C:/Users/noordotda/Documents/Github/discord-bot/src/index.js)
 
-## 📋 Prérequis
+## Prerequis
 
-- **Node.js 18+**
-- **npm**
-- Un bot Discord configuré (token + intents + permissions adaptées)
+- Node.js 18+
+- npm
+- Un bot Discord configure avec les permissions adaptees
 
----
+## Configuration
 
-## ⚙️ Configuration
+Le projet charge `.env` puis `.env.<env>` comme `.env.dev` ou `.env.prod`.
 
-Le projet lit `.env` et `.env.<env>` (ex: `.env.dev`, `.env.prod`).
-
-### Variables requises
+Variables minimales:
 
 ```env
 DISCORD_TOKEN=...
@@ -60,186 +45,112 @@ VOICE_CHANNEL_ID=...
 PLAYLIST_CHANNEL_ID=...
 ```
 
-### Variables utiles (optionnelles selon les fonctionnalités)
+Variables utiles selon les modules:
 
 ```env
-# Discord / déploiement commandes
 CLIENT_ID=...
 GUILD_ID=...
 DEV_GUILD_ID=...
 BOT_ROLE_NAME=soundSHINE
-
-# Stream / nowplaying
 STREAM_URL=...
 JSON_URL=...
-
-# API HTTP
 API_PORT=3000
 API_TOKEN=...
 LOG_LEVEL=info
-
-# Requests / rôles
 REQ_ROLE_ID=...
 REQ_CHANNEL_ID=...
-
-# Services externes
 UNSPLASH_ACCESS_KEY=...
 AIRTABLE_API_KEY=...
 AIRTABLE_BASE_ID=...
 ```
 
-> 💡 Astuce : en local, commence avec `NODE_ENV=dev` et un fichier `.env.dev`.
-
----
-
-## 🚀 Installation & démarrage
+## Demarrage
 
 ```bash
 npm install
-```
-
-### Lancer en développement
-
-```bash
 npm run dev
 ```
 
-### Lancer en production
+Production:
 
 ```bash
 npm run prod
 ```
 
----
-
-## 🤖 Commandes Discord
-
-## Commandes principales
-
-- `/help` — liste les commandes disponibles selon le rôle.
-- `/ping` — affiche la latence bot/API.
-- `/silence <action>` — pilote le détecteur de silence (admin).
-
-### Groupe `/radio`
-- `/radio play` — lance le stream dans un Stage Channel.
-- `/radio stop` — stoppe la lecture et déconnecte le bot (admin).
-- `/radio nowplaying` — affiche le titre en cours (via `JSON_URL`).
-
-### Groupe `/station`
-- `/station schedule`
-- `/station stats`
-- `/station speaker-status`
-- `/station promote-speaker` (admin)
-- `/station stream-config`
-
-### Groupe `/request`
-> Accès contrôlé par `REQ_ROLE_ID`.
-
-- `/request ask`
-- `/request edit`
-- `/request delete`
-- `/request list`
-
-### Commandes fun
-- `/drink @user`
-- `/getwallpaper` (nécessite `UNSPLASH_ACCESS_KEY`)
-
----
-
-## 🌐 API HTTP
-
-Base locale par défaut : `http://localhost:3000`
-
-### Endpoints principaux
-- `GET /` — infos API et endpoints disponibles
-- `GET /v1/health` — état de santé du service
-- `GET /v1/metrics` — métriques JSON
-- `GET /v1/metrics/prometheus` — métriques Prometheus
-- `GET /v1/logs`
-- `GET/POST /v1/alerts`
-- `POST /v1/send-playlist` — mise à jour playlist/topic (header `x-api-key` requis)
-- `GET/POST /v1/silence` — gestion du détecteur de silence
-
-Exemple healthcheck :
+## Scripts utiles
 
 ```bash
-curl http://localhost:3000/v1/health
-```
-
----
-
-## 🧪 Tests & qualité
-
-### Tests
-```bash
+npm run deploy:dev
+npm run deploy:global
+npm run clear:dev
+npm run clear:global
+npm run db:deploy
+npm run lint
+npm run lint:fix
 npm test
 npm run test:coverage
 npm run test:integration
 npm run test:performance
 npm run test:stress
 npm run test:security
-```
-
-### Lint
-```bash
-npm run lint
-npm run lint:fix
-```
-
----
-
-## 📦 Déploiement des commandes Discord
-
-### Environnement dev (guild)
-```bash
-npm run deploy:dev
-```
-
-### Environnement global
-```bash
-npm run deploy:global
-```
-
-### Nettoyage
-```bash
-npm run clear:dev
-npm run clear:global
-```
-
----
-
-## 🔐 Sécurité
-
-- Middlewares API de protection (headers, validation, rate limit, anti-XSS/SQLi).
-- Endpoint sensible playlist protégé par API key.
-- Scripts de vérification sécurité disponibles via npm scripts.
-
-Consulte aussi : [`docs/SECURITY.md`](docs/SECURITY.md)
-
----
-
-## 🛠️ Outils utiles
-
-```bash
+npm run test:all
+npm run test:ui
+npm run security:check
 npm run context:md
-npm run context:full
-npm run git-actions
 ```
 
-- Plus de détails dans [`scripts/README.md`](scripts/README.md)
-- Documentation des tests dans [`tests/README.md`](tests/README.md)
+Les configurations canoniques sont:
 
----
+- [`src/config/eslint.config.js`](/C:/Users/noordotda/Documents/Github/discord-bot/src/config/eslint.config.js)
+- [`src/config/vitest.config.js`](/C:/Users/noordotda/Documents/Github/discord-bot/src/config/vitest.config.js)
 
-## 🤝 Contribuer
+## Commandes Discord
 
-Les contributions sont les bienvenues. Ouvre une issue ou une PR avec :
-- un contexte clair,
-- des étapes de reproduction,
-- et si possible des tests associés.
+- `/help`
+- `/ping`
+- `/silence <action>`
+- `/radio play`
+- `/radio stop`
+- `/radio nowplaying`
+- `/station schedule`
+- `/station stats`
+- `/station speaker-status`
+- `/station promote-speaker`
+- `/station stream-config`
+- `/request ask`
+- `/request edit`
+- `/request delete`
+- `/request list`
+- `/drink`
+- `/getwallpaper`
 
----
+## API HTTP
 
-## 📩 Invitation du bot
+Base locale par defaut: `http://localhost:3000`
 
-👉 [Invite Bot on your server](https://discord.com/oauth2/authorize?client_id=1382149009250062458)
+- `GET /`
+- `GET /v1/health`
+- `GET /v1/metrics`
+- `GET /v1/metrics/prometheus`
+- `GET /v1/logs`
+- `GET/POST /v1/alerts`
+- `POST /v1/send-playlist`
+- `GET/POST /v1/silence`
+
+Exemple:
+
+```bash
+curl http://localhost:3000/v1/health
+```
+
+## Notes de maintenance
+
+- Le dossier `scripts/` fait partie du projet et ne doit plus etre ignore par Git.
+- Les anciennes configs ESLint/Jest ont ete retirees au profit des configs actuelles sous `src/config/`.
+- Les artefacts generes sous `src/node_modules/` sont maintenant ignores.
+
+## Documentation associee
+
+- [`docs/SECURITY.md`](/C:/Users/noordotda/Documents/Github/discord-bot/docs/SECURITY.md)
+- [`scripts/README.md`](/C:/Users/noordotda/Documents/Github/discord-bot/scripts/README.md)
+- [`src/tests/README.md`](/C:/Users/noordotda/Documents/Github/discord-bot/src/tests/README.md)

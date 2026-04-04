@@ -7,8 +7,8 @@ import config from './config.js';
 import { loadCommands } from './handlers/loadCommands.js';
 import { loadEvents } from './handlers/loadEvents.js';
 import logger from './logger.js';
+import updateStatus from './tasks/updateStatus.js';
 import errorHandler from '../core/monitor.js';
-import updateStatus from '../bot/tasks/updateStatus.js';
 import stageMonitor from '../core/services/StageMonitor.js';
 
 let client = null;
@@ -16,26 +16,18 @@ let updateStatusInterval = null;
 
 export async function startBot () {
   try {
-    // Initialiser le client Discord
     client = createClient();
 
-    // Charger les commandes et événements
     await loadCommands(client);
     await loadEvents(client);
-
-    // Connecter le bot
     await connectBot();
-
-    // Démarrer les tâches
     startUpdateStatus();
-
-    // 🎭 Démarrer la surveillance des stages
     stageMonitor.startMonitoring();
 
     return client;
   } catch (error) {
     errorHandler.handleCriticalError(error, 'BOT_STARTUP');
-    logger.error(`Erreur critique lors du démarrage : ${error.message}`);
+    logger.error(`Erreur critique lors du demarrage : ${error.message}`);
     throw error;
   }
 }
@@ -57,7 +49,6 @@ function startUpdateStatus () {
     return;
   }
 
-  // Exécution initiale
   (async () => {
     try {
       await updateStatus.execute(client);
@@ -74,7 +65,6 @@ function startUpdateStatus () {
     );
   }
 
-  // Configuration de l'intervalle
   updateStatusInterval = setInterval(() => {
     if (typeof updateStatus.execute === 'function') {
       updateStatus.execute(client).catch((error) => {
@@ -83,7 +73,7 @@ function startUpdateStatus () {
       });
     } else {
       logger.error(
-        'updateStatus.execute est undefined pendant l\'intervalle, arrêt du setInterval'
+        'updateStatus.execute est undefined pendant l\'intervalle, arret du setInterval'
       );
       clearInterval(updateStatusInterval);
     }
@@ -96,17 +86,16 @@ export async function stopBot () {
       clearInterval(updateStatusInterval);
     }
 
-    // 🎭 Arrêter la surveillance des stages
     stageMonitor.stopMonitoring();
 
     if (client) {
       await client.destroy();
     }
 
-    logger.success('soundSHINE Bot arrêté proprement');
+    logger.success('soundSHINE Bot arrete proprement');
   } catch (error) {
     errorHandler.handleCriticalError(error, 'BOT_SHUTDOWN');
-    logger.error('Erreur lors de l\'arrêt du bot:', error);
+    logger.error('Erreur lors de l\'arret du bot:', error);
     throw error;
   }
 }

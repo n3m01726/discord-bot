@@ -2,6 +2,11 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import stopCommand from "../../bot/commands/radio/stop.js";
 
 vi.mock("discord.js", () => ({
+  PermissionFlagsBits: {
+    Connect: 1,
+    Speak: 2,
+    RequestToSpeak: 3,
+  },
   SlashCommandBuilder: class {
     setName(name) {
       this.name = name;

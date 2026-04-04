@@ -70,7 +70,7 @@ function numericStringWithDefault (defaultValue) {
     }
 
     const stringValue = String(value);
-    return /^\d+$/.test(stringValue) ? stringValue : defaultValue;
+    return (/^\d+$/).test(stringValue) ? stringValue : defaultValue;
   }, z.string().regex(/^\d+$/));
 }
 
@@ -138,7 +138,7 @@ const envSchema = z.object({
   SILENCE_CHECK_INTERVAL: numericStringWithDefault('10000').default('10000'),
   SILENCE_ALERTS_ENABLED: booleanFlagWithDefault(true).default(true),
   SILENCE_ALERT_CHANNEL_ID: optionalStringSchema(),
-  ADMIN_USER_ID: optionalStringSchema(),
+  ADMIN_USER_ID: optionalStringSchema()
 });
 
 function buildConfig () {
@@ -205,16 +205,16 @@ function buildConfig () {
       corsOrigin: env.CORS_ORIGIN || '*',
       rateLimit: {
         windowMs: Number(env.RATE_LIMIT_WINDOW),
-        max: Number(env.RATE_LIMIT_MAX),
-      },
+        max: Number(env.RATE_LIMIT_MAX)
+      }
     },
     cache: {
       ttl: Number(env.CACHE_TTL),
-      maxSize: Number(env.CACHE_MAX_SIZE),
+      maxSize: Number(env.CACHE_MAX_SIZE)
     },
     monitoring: {
       enableMetrics: env.ENABLE_METRICS,
-      enableHealthCheck: env.ENABLE_HEALTH_CHECK,
+      enableHealthCheck: env.ENABLE_HEALTH_CHECK
     },
     discord: {
       token: env.DISCORD_TOKEN,
@@ -224,14 +224,14 @@ function buildConfig () {
       adminRoleId: env.ADMIN_ROLE_ID,
       voiceChannelId: env.VOICE_CHANNEL_ID,
       playlistChannelId: env.PLAYLIST_CHANNEL_ID,
-      botRoleName: env.BOT_ROLE_NAME,
+      botRoleName: env.BOT_ROLE_NAME
     },
     api: {
       port: Number(env.API_PORT),
       token: env.API_TOKEN,
       unsplashKey: env.UNSPLASH_ACCESS_KEY,
       streamUrl: env.STREAM_URL,
-      jsonUrl: env.JSON_URL,
+      jsonUrl: env.JSON_URL
     },
 
     hasAirtable () {
@@ -250,7 +250,7 @@ function buildConfig () {
       const services = {
         airtable: this.hasAirtable(),
         unsplash: this.hasUnsplash(),
-        streaming: this.hasStreamService(),
+        streaming: this.hasStreamService()
       };
 
       logger.banner('État des services :');
@@ -259,7 +259,7 @@ function buildConfig () {
       logger.info(`   Streaming: ${services.streaming ? '✅ Configuré' : '❌ Non configuré'}`);
 
       return services;
-    },
+    }
   };
 
   const missingOptionalVars = [
@@ -267,7 +267,7 @@ function buildConfig () {
     'STREAM_URL',
     'JSON_URL',
     'AIRTABLE_API_KEY',
-    'AIRTABLE_BASE_ID',
+    'AIRTABLE_BASE_ID'
   ].filter((key) => !config[key]);
 
   if (missingOptionalVars.length > 0 && config.NODE_ENV !== 'test') {

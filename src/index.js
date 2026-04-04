@@ -1,18 +1,21 @@
 // ========================================
-// index.js - Point d'entrée principal //
+// index.js - Point d'entree principal
 // ========================================
 
-import "dotenv/config";
-import { startBot, stopBot } from "./bot/startup.js";
-import WebServer from "./api/index.js";
-import logger from "./bot/logger.js";
-import config from "./bot/config.js";
-import { database } from "./utils/database/database.js";
-import appState from "./core/services/AppState.js";
-import { retryDiscord, retry } from "./utils/shared/retry.js";
-import { registerProcessHandlers } from "./core/lifecycle.js";
-import pkg from "../package.json" with { type: "json" };
+import 'dotenv/config';
+import fs from 'fs';
+import WebServer from './api/index.js';
+import { startBot, stopBot } from './bot/startup.js';
+import config from './bot/config.js';
+import logger from './bot/logger.js';
 import logMemory from './bot/tasks/logMemory.js';
+import { registerProcessHandlers } from './core/lifecycle.js';
+import appState from './core/services/AppState.js';
+import { database } from './utils/database/database.js';
+import { retryDiscord, retry } from './utils/shared/retry.js';
+
+const pkg = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
+
 let botClient = null;
 let apiServer = null;
 let isShuttingDown = false;
@@ -20,11 +23,11 @@ let isShuttingDown = false;
 appState.initialize();
 appState.setConfigLoaded(config);
 
-async function gracefulShutdown(signal = "UNKNOWN") {
+async function gracefulShutdown (signal = 'UNKNOWN') {
   if (isShuttingDown) return;
   isShuttingDown = true;
 
-  logger.warn(`Fermeture demandée (signal: ${signal})`);
+  logger.warn(`Fermeture demandee (signal: ${signal})`);
 
   try {
     if (apiServer) {
@@ -33,13 +36,10 @@ async function gracefulShutdown(signal = "UNKNOWN") {
     }
 
     if (botClient) {
-
       await stopBot();
       appState.setBotConnected(false);
       appState.setBotReady(false);
-
     }
-
 
     await database.disconnect();
     appState.setDatabaseConnected(false);
@@ -47,14 +47,14 @@ async function gracefulShutdown(signal = "UNKNOWN") {
 
     process.exit(0);
   } catch (error) {
-    logger.error("Erreur durant la fermeture:", error);
+    logger.error('Erreur durant la fermeture:', error);
     process.exit(1);
   }
 }
 
-async function startApplication() {
+async function startApplication () {
   try {
-    console.log("");
+    console.log('');
     logger.info(`Version: ${pkg.version}`);
     logger.info(`Node.js: ${process.version}`);
     logger.info(`Environnement: ${config.NODE_ENV}`);
@@ -68,12 +68,13 @@ async function startApplication() {
       },
       {
         onRetry: (error, attempt) =>
-          logger.warn(`Retry Discord ${attempt}: ${error.message}`),
+          logger.warn(`Retry Discord ${attempt}: ${error.message}`)
       }
     );
 
     apiServer = new WebServer(botClient, logger);
-    logger.banner("Initialisation du serveur API...");
+    logger.banner('Initialisation du serveur API...');
+
     await retry(
       async () => {
         await apiServer.start(config.API_PORT);
@@ -81,25 +82,27 @@ async function startApplication() {
       },
       {
         onRetry: (error, attempt) =>
-          logger.warn(`Retry API ${attempt}: ${error.message}`),
+          logger.warn(`Retry API ${attempt}: ${error.message}`)
       }
     );
 
     logger.success(`API en ligne sur le port ${config.API_PORT}`);
     registerProcessHandlers({ gracefulShutdown });
 
-    logger.api("Routes API disponibles : /v1/metrics, /v1/health, /v1/logs, /v1/alerts, v1/send-playlist");
+    logger.api(
+      'Routes API disponibles : /v1/metrics, /v1/health, /v1/logs, /v1/alerts, /v1/send-playlist'
+    );
     logMemory.execute();
-    logger.banner("Bot prêt. Logging en cours...");
+    logger.banner('Bot pret. Logging en cours...');
   } catch (error) {
-    logger.error("Erreur critique au démarrage:", error);
+    logger.error('Erreur critique au demarrage:', error);
 
     try {
       if (botClient) await stopBot();
       if (apiServer) await apiServer.stop();
       await database.disconnect();
     } catch (cleanupError) {
-      logger.error("Erreur lors du cleanup:", cleanupError);
+      logger.error('Erreur lors du cleanup:', cleanupError);
     }
 
     process.exit(1);

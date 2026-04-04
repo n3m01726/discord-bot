@@ -12,19 +12,16 @@ export default {
         .setName('join_channel')
         .setDescription('Salon vocal source (Join-to-Create)')
         .setRequired(true)
-        .addChannelTypes(ChannelType.GuildVoice)
-    )
+        .addChannelTypes(ChannelType.GuildVoice))
     .addChannelOption((option) =>
       option
         .setName('category')
         .setDescription('Catégorie de création des salons temporaires')
-        .addChannelTypes(ChannelType.GuildCategory)
-    )
+        .addChannelTypes(ChannelType.GuildCategory))
     .addBooleanOption((option) =>
       option
         .setName('auto_play_radio')
-        .setDescription('Active l\'auto-play radio pour chaque salon temporaire')
-    ),
+        .setDescription('Active l\'auto-play radio pour chaque salon temporaire')),
 
   async execute (interaction) {
     return setupTempVc(interaction);

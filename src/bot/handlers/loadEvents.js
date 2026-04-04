@@ -19,9 +19,14 @@ function getEventFiles (dirPath) {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
   for (const entry of entries) {
-    const fullPath = path.join(dirPath, entry.name);
+    const entryName = typeof entry === 'string' ? entry : entry.name;
+    const fullPath = path.join(dirPath, entryName);
 
-    if (entry.isDirectory()) {
+    if (typeof entry === 'string') {
+      if (entryName.endsWith('.js')) {
+        files.push(fullPath);
+      }
+    } else if (entry.isDirectory()) {
       files.push(...getEventFiles(fullPath));
     } else if (entry.isFile() && entry.name.endsWith('.js')) {
       files.push(fullPath);
@@ -50,7 +55,7 @@ export async function loadEvents (client, importFn = (src) => import(src)) {
     const failedEvents = [];
 
     for (const filePath of files) {
-      const file = path.basename(filePath);
+      const file = filePath.split(/[/\\]/).pop() ?? filePath;
 
       try {
         const fileModule = await importFn(pathToFileURL(filePath).href);

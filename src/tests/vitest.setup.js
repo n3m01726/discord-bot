@@ -54,6 +54,11 @@ vi.mock("discord.js", () => ({
   MessageFlags: {
     Ephemeral: 64,
   },
+  PermissionFlagsBits: {
+    Connect: 1,
+    Speak: 2,
+    RequestToSpeak: 3,
+  },
   SlashCommandBuilder: vi.fn().mockImplementation(() => {
     let _name = "";
     let _description = "";
@@ -340,4 +345,3 @@ vi.mock("../core/config.js", () => ({
 // process.env.API_TOKEN = 'test-api-token';
 // process.env.BOT_ROLE_NAME = 'soundSHINE';
 // process.env.DEV_GUILD_ID = 'test-dev-guild';
-

@@ -27,10 +27,9 @@
     "javascript"
   ],
   "files": [
-    "index.js",
+    "src/",
     "scripts/",
-    "utils/",
-    "tests/"
+    "README.md"
   ],
   "overrides": {
     "glob": "^9.0.0"
@@ -75,26 +74,27 @@
     "vitest": "^3.2.4"
   },
   "scripts": {
-    "dev": "dotenv -e .env.dev -- nodemon index.js",
-    "prod": "dotenv -e .env.prod -- node index.js",
+    "dev": "dotenv -e .env.dev -- nodemon src/index.js",
+    "prod": "dotenv -e .env.prod -- node src/index.js",
     "deploy:dev": "dotenv -e .env.dev -- node scripts/bot/deploy-commands.js --dev",
     "clear:dev": "dotenv -e .env.dev -- node scripts/bot/deploy-commands.js --dev --clear",
     "clear:global": "dotenv -e .env.prod -- node scripts/bot/deploy-commands.js --global --clear",
     "deploy:global": "dotenv -e .env.prod -- node scripts/bot/deploy-commands.js --global",
-    "db:deploy": "node bot/utils/database.js",
+    "db:deploy": "node scripts/dev/init-db.js",
     "git-actions": "node scripts/git/git-actions.js",
-    "test": "vitest --config config/vitest.config.js",
-    "test:coverage": "vitest --coverage --config config/vitest.config.js",
-    "test:integration": "vitest tests/integration/ --config config/vitest.config.js",
-    "test:performance": "vitest tests/performance/ --config config/vitest.config.js",
-    "test:stress": "vitest tests/stress/ --config config/vitest.config.js",
-    "test:security": "vitest tests/security.test.js --config config/vitest.config.js",
-    "lint": "eslint bot/ api/ core/ --config config/.eslintrc.js",
-    "lint:fix": "eslint bot/ api/ core/ --config config/.eslintrc.js --fix && npm run format",
-    "security:audit": "node scripts/security/audit.js",
-    "security:fix": "node scripts/security/fix-permissions.js",
-    "security:check": "npm run security:fix && npm run security:audit && npm run test:security",
-    "context": "node ./tools/projectContext.js",
+    "test": "vitest --config src/config/vitest.config.js",
+    "test:coverage": "vitest --coverage --config src/config/vitest.config.js",
+    "test:integration": "vitest src/tests/integration/ --config src/config/vitest.config.js",
+    "test:performance": "vitest src/tests/performance/ --config src/config/vitest.config.js",
+    "test:stress": "vitest src/tests/stress/ --config src/config/vitest.config.js",
+    "test:security": "vitest src/tests/security.test.js --config src/config/vitest.config.js",
+    "test:all": "node scripts/dev/run-tests.js",
+    "test:ui": "vitest --ui --config src/config/vitest.config.js",
+    "lint": "eslint src/bot src/api src/core --config src/config/eslint.config.js",
+    "lint:fix": "eslint src/bot src/api src/core --config src/config/eslint.config.js --fix",
+    "security:audit": "node scripts/infra/security-check.js",
+    "security:check": "npm run security:audit && npm run test:security",
+    "context": "node ./scripts/tools/projectContext.js",
     "context:md": "node ./scripts/tools/projectContext.js --md",
     "context:full": "node ./scripts/tools/projectContext.js --md --full"
   }

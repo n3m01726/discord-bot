@@ -54,7 +54,7 @@ async function handlePlayCommand (interaction) {
     const config = (await import('../config.js')).default;
     const { STREAM_URL } = config;
     logger.info('🔗 URL du stream récupérée:', STREAM_URL ? 'OK' : 'MANQUANTE');
-    
+
     // Vérifier que l'URL du stream est configurée
     if (!STREAM_URL) {
       logger.error('❌ STREAM_URL non configurée dans les variables d\'environnement');

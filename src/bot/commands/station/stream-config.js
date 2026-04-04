@@ -12,7 +12,7 @@ export default {
       .setName('stream-config')
       .setDescription('Vérifie la configuration du streaming'),
 
-  async execute(interaction) {
+  async execute (interaction) {
     try {
       const { voice } = interaction.member;
       const channel = voice && voice.channel;
@@ -75,7 +75,7 @@ export default {
       if (!hasJsonUrl) {
         advice += '• Configurez la variable d\'environnement `JSON_URL` pour les métadonnées\n';
       }
-      
+
       if (advice) {
         embed.addFields({
           name: '💡 Conseils',
@@ -87,9 +87,9 @@ export default {
       // Tester l'URL du stream si elle existe
       if (hasStreamUrl) {
         try {
-          const response = await fetch(streamUrl, { 
+          const response = await fetch(streamUrl, {
             method: 'HEAD',
-            timeout: 5000 
+            timeout: 5000
           });
           const isAccessible = response.ok;
           embed.addFields({
@@ -111,7 +111,6 @@ export default {
         message: { embeds: [embed] },
         ephemeral: true
       };
-
     } catch (error) {
       logger.error('❌ Erreur dans stream-config:', error);
       return {

@@ -57,11 +57,12 @@ export async function getTempVcSettings (guildId) {
   const rows = await db.query('SELECT * FROM tempvc_settings WHERE guild_id = ?', [guildId]);
   if (!rows.length) return null;
 
+  const [row] = rows;
   return {
-    guildId: rows[0].guild_id,
-    joinChannelId: rows[0].join_channel_id,
-    categoryId: rows[0].category_id,
-    autoPlayRadio: rows[0].auto_play_radio === 1
+    guildId: row.guild_id,
+    joinChannelId: row.join_channel_id,
+    categoryId: row.category_id,
+    autoPlayRadio: row.auto_play_radio === 1
   };
 }
 
@@ -86,7 +87,7 @@ export async function getTempVcChannelRecord (channelId) {
   const rows = await db.query('SELECT * FROM tempvc_channels WHERE channel_id = ?', [channelId]);
   if (!rows.length) return null;
 
-  const row = rows[0];
+  const [row] = rows;
   return {
     channelId: row.channel_id,
     guildId: row.guild_id,

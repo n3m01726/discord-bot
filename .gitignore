@@ -5,7 +5,6 @@
 # ========================================
 # Logs et fichiers de diagnostic
 # ========================================
-scripts/
 logs/
 *.log
 npm-debug.log*
@@ -28,6 +27,7 @@ pids
 # Couverture de tests
 # ========================================
 coverage/
+src/node_modules/
 *.lcov
 .nyc_output
 lib-cov
